@@ -14,7 +14,8 @@
 
 <p>다음 소스는 N번째 피보나치 수를 구하는 C++ 함수이다.</p>
 
-<pre>int fibonacci(int n) {
+```
+int fibonacci(int n) {
     if (n == 0) {
         printf("0");
         return 0;
@@ -25,7 +26,7 @@
         return fibonacci(n‐1) + fibonacci(n‐2);
     }
 }
-</pre>
+```
 
 <p><code>fibonacci(3)</code>을 호출하면 다음과 같은 일이 일어난다.</p>
 

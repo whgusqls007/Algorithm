@@ -1,38 +1,31 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import java.util.Arrays;
 
 public class Main {
 
 	public static void main(String[] args) throws Exception {
 		BufferedReader br  = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter bw  = new BufferedWriter(new OutputStreamWriter(System.out));
-
 		int            N   = Integer.parseInt(br.readLine());
-
-		int            i   = 0;
-		int            min = Integer.MAX_VALUE;
-
-		if (N % 3 == 0) {
-			min = N / 3;
+		int[]          arr = new int[N + 1];
+		if (N == 1 || N == 2 || N == 4) {
+			System.out.println(-1);
+			return;
+		}
+		if (N == 5 || N == 3) {
+			System.out.println(1);
+			return;
 		}
 
-		while (true) {
-			i++;
-			if (5 * i > N) {
-				break;
-			}
-			int n1 = N - (5 * i);
-			if (n1 % 3 != 0) {
-				continue;
-			}
-
-			int n2 = n1 / 3;
-			min = min < n2 + i ? min : n2 + i;
+		Arrays.fill(arr, 10000);
+		if (N > 5) {
+			arr[3] = arr[5] = 1;
+		}
+		for (int i = 6; i < N + 1; i++) {
+			arr[i] = Math.min(arr[i - 3] + 1, arr[i - 5] + 1);
 		}
 
-		System.out.println(min == Integer.MAX_VALUE ? -1 : min);
+		System.out.println(arr[N] >= 10000 ? -1 : arr[N]);
 	}
 
 }

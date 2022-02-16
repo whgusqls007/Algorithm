@@ -19,26 +19,24 @@ public class Main {
 
 		r = Integer.parseInt(st.nextToken());
 		c = Integer.parseInt(st.nextToken());
-		dc(NSqure, r, c);
-		System.out.println(cnt);
-	}
+		while (NSqure != 0) {
 
-	static void dc(int N, int y, int x) {
-		if (N == 1) {
-			return;
+			int size = NSqure / 2;
+			if (r < size && c < size) {
+				// do nothing
+			} else if (r < size && c >= size) {
+				cnt += NSqure * NSqure / 4;
+				c   -= size;
+			} else if (r >= size && c < size) {
+				cnt += NSqure * NSqure / 4 * 2;
+				r   -= size;
+			} else {
+				cnt += NSqure * NSqure / 4 * 3;
+				r   -= size;
+				c   -= size;
+			}
+			NSqure /= 2;
 		}
-		int size = N / 2;
-		if (y < size && x < size) {
-			dc(N / 2, y, x);
-		} else if (y < size && x >= size) {
-			cnt += (N * N) / 4;
-			dc(size, y, x - size);
-		} else if (y >= size && x < size) {
-			cnt += (N * N) / 4 * 2;
-			dc(size, y - size, x);
-		} else {
-			cnt += (N * N) / 4 * 3;
-			dc(size, y - size, x - size);
-		}
+		System.out.println(cnt);
 	}
 }

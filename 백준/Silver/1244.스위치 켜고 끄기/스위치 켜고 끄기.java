@@ -1,66 +1,57 @@
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.StringTokenizer;
 
-public class Main{
-	public static void main(String[] args) {
-		Scanner sc = new Scanner(System.in);
-		int n = sc.nextInt()+1;
-		int[] sw = new int[n];
-		
-		for (int i = 1; i < n; i++) {
-			sw[i] = sc.nextInt();
+public class Main {
+	public static void main(String[] args) throws Exception {
+		BufferedReader  br  = new BufferedReader(new InputStreamReader(System.in));
+		int             N   = Integer.parseInt(br.readLine());
+		int[]           arr = new int[N + 1];
+		StringTokenizer st  = new StringTokenizer(br.readLine());
+		for (int i = 1; i < N + 1; i++) {
+			arr[i] = Integer.parseInt(st.nextToken());
 		}
-		int student = sc.nextInt();
-		
-		for(int j = 1; j<= student; j++) {
-			int gender = sc.nextInt();
-			int key = sc.nextInt();
-			
-			//남자라면
-			if(gender == 1) {
-				//key의 배수로
-				for(int i = key; i<n; i+=key) sw[i]^=1;//xor(다르면 1)
-			}
-			//여자라면
-			else if(gender == 2){
-				int l = key-1;
-				int r = key+1;
-				
-				while(true) {//대칭 찾아서
-					if(l<1 || r>= n) break;
-					if(sw[l] != sw[r]) break;
-					l--; r++;
+		int M = Integer.parseInt(br.readLine());
+		for (int i = 0; i < M; i++) {
+			st = new StringTokenizer(br.readLine());
+			int s = Integer.parseInt(st.nextToken());
+			int n = Integer.parseInt(st.nextToken());
+			if (s == 1) {
+				int a = 1;
+				while (true) {
+					try {
+						arr[n * a] ^= 1;
+						a++;
+					} catch (ArrayIndexOutOfBoundsException e) {
+						break;
+					}
 				}
-				l++; r--;
-				
-				while(l<=r) {
-					sw[l] ^=1;//xor
-					l++;
+			} else {
+				int a = 1;
+				arr[n] ^= 1;
+				while (true) {
+					try {
+						if (n - a < 1 || n + a > N) {
+							break;
+						}
+						if (arr[n - a] == arr[n + a]) {
+							arr[n - a] ^= 1;
+							arr[n + a] ^= 1;
+							a++;
+						} else {
+							break;
+						}
+					} catch (ArrayIndexOutOfBoundsException e) {
+						break;
+					}
 				}
 			}
 		}
-		//asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        //asdddddddddddddddddddd
-        
-		for (int i = 1; i < n; i++) {
-			System.out.print(sw[i]+" ");
-			if(i%20==0) System.out.println();
+		for (int i = 1; i < N + 1; i++) {
+			System.out.print(arr[i] + " ");
+			if (i % 20 == 0) {
+				System.out.println();
+			}
 		}
-	
 	}
 }

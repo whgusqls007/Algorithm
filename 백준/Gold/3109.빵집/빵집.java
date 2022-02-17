@@ -35,13 +35,16 @@ public class Main {
 	}
 
 	public static boolean pipe(int y, int x) {
+		if(x == C - 1) {
+			return true;
+		}
 		int nx = x + 1;
 		for (int i = 0; i < 3; i++) {
 			int ny = y + dy[i];
 
 			if (ny >= 0 && ny <= R - 1 && arr[ny][nx] == '.') {
 				arr[ny][nx] = '~';
-				if (nx == C - 1 || pipe(ny, nx)) {
+				if (pipe(ny, nx)) {
 					return true;
 				}
 			}

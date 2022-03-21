@@ -1,10 +1,13 @@
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.StringTokenizer;
 
 public class Main {
 	public static void main( String[] args ) throws Exception {
 		BufferedReader  br     = new BufferedReader( new InputStreamReader( System.in ) );
+		BufferedWriter  bw     = new BufferedWriter( new OutputStreamWriter( System.out ) );
 		StringTokenizer st     = new StringTokenizer( br.readLine() );
 		int             R      = Integer.parseInt( st.nextToken() );
 		int             C      = Integer.parseInt( st.nextToken() );
@@ -72,10 +75,12 @@ public class Main {
 
 		for ( int i = 0; i < R; i++ ) {
 			for ( int j = 0; j < C; j++ ) {
-				if ( map[i][j][0] == 0 ) System.out.print( '.' );
-				else System.out.print( 'O' );
+				if ( map[i][j][0] == 0 ) bw.write( '.' );
+				else bw.write( 'O' );
 			}
-			System.out.println();
+			bw.write( "\n" );
 		}
+
+		bw.flush();
 	}
 }

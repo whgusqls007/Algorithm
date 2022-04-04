@@ -11,10 +11,8 @@ public class Main {
 		StringTokenizer st  = null;
 		int             N   = Integer.parseInt( br.readLine() );
 		int[][]         pp  = new int[N][2];
-		int[]           A   = new int[N];
 		int[]           B   = new int[N];
 		int[]           LIS = new int[N];
-		int             max = Character.MIN_VALUE;
 		int             len = 0;
 
 		for ( int i = 0; i < N; i++ ) {
@@ -26,14 +24,9 @@ public class Main {
 		Arrays.sort( pp, ( e1, e2 ) -> Integer.compare( e1[0], e2[0] ) );
 
 		for ( int i = 0; i < N; i++ ) {
-			A[i] = pp[i][0];
-			B[i] = pp[i][1];
-		}
+			int position = Math.abs( Arrays.binarySearch( LIS, 0, len, pp[i][1] ) ) - 1;
 
-		for ( int i = 0; i < N; i++ ) {
-			int position = Math.abs( Arrays.binarySearch( LIS, 0, len, B[i] ) ) - 1;
-
-			LIS[position] = B[i];
+			LIS[position] = pp[i][1];
 
 			if ( len == position ) len++;
 		}

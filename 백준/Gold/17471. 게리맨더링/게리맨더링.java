@@ -1,33 +1,13 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.StringTokenizer;
-
-class City {
-	int             number;
-	int             population;
-	boolean         RB;
-	List< Integer > nextCity;
-
-	public City( int number, int population ) {
-		super();
-		this.number     = number;
-		this.population = population;
-		this.nextCity   = new ArrayList<>();
-		this.RB         = false;
-	}
-
-}
 
 public class Main {
 	static BufferedReader br;
 	static int            N;
-	static List< City >   cities;
 	static int[][]        map;
-	static boolean[]      isBlue;
-	static boolean[]      isRed;
+	static int[]          population;
 	static boolean[]      visit;
 	static int            min;
 
@@ -56,11 +36,9 @@ public class Main {
 		}
 
 		// index 마을이 파란색일때
-		isBlue[index] = true;
 		selectRedBlue( index + 1, num | ( 1 << index ) );
 
 		// index 마을이 빨간색일때
-		isBlue[index] = false;
 		selectRedBlue( index + 1, num );
 	}
 
@@ -69,9 +47,9 @@ public class Main {
 		int rp = 0;
 		for ( int i = 0; i < N; i++ ) {
 			if ( ( num & 1 << i ) != 0 ) {
-				bp += cities.get( i ).population;
+				bp += population[i];
 			} else {
-				rp += cities.get( i ).population;
+				rp += population[i];
 			}
 		}
 		return Math.abs( bp - rp );
@@ -98,6 +76,7 @@ public class Main {
 		if ( r + b == ( 1 << N ) - 1 ) {
 			return true;
 		}
+
 		return false;
 	}
 
@@ -147,23 +126,16 @@ public class Main {
 	}
 
 	static void init() throws NumberFormatException, IOException {
-		br     = new BufferedReader( new InputStreamReader( System.in ) );
-		N      = Integer.parseInt( br.readLine() );
-		cities = new ArrayList< City >();
-		map    = new int[N][N];
-		isBlue = new boolean[N];
-		isRed  = new boolean[N];
-		min    = Integer.MAX_VALUE;
+		br         = new BufferedReader( new InputStreamReader( System.in ) );
+		N          = Integer.parseInt( br.readLine() );
+		map        = new int[N][N];
+		population = new int[N];
+		min        = Integer.MAX_VALUE;
 
 		StringTokenizer st = new StringTokenizer( br.readLine() );
 
 		for ( int i = 0; i < N; i++ ) {
-			cities.add(
-					new City(
-							i,
-							Integer.parseInt( st.nextToken() )
-					)
-			);
+			population[i] = Integer.parseInt( st.nextToken() );
 		}
 
 		for ( int i = 0; i < N; i++ ) {
@@ -172,7 +144,6 @@ public class Main {
 
 			for ( int j = 0; j < n; j++ ) {
 				int num = Integer.parseInt( st.nextToken() );
-				cities.get( i ).nextCity.add( num - 1 );
 				map[i][num - 1] = 1;
 			}
 		}

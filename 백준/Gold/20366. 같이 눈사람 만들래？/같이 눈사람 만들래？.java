@@ -61,6 +61,9 @@ public class Main {
 			}
 
 			min = Math.min(min, Math.abs(list.get(i).sum - list.get(i + 1).sum));
+            if(min == 0) {
+                break;
+            }
 		}
 
 		System.out.println(min);

@@ -1,11 +1,12 @@
 import java.util.*;
 import java.io.*;
 
+@SuppressWarnings("unchecked")
 public class Main {
-    static int N, M;
+    static int N, M, count;
     static int[] arr;
     static int[][] map;
-    static ArrayList<int[]> al;
+    static ArrayList<int[]>[] al;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -24,30 +25,45 @@ public class Main {
 
         numbering();
 
-        al = new ArrayList<>();
+        al = new ArrayList[count];
+        for (int i = 0; i < count; i++) {
+            al[i] = new ArrayList<>();
+        }
+
         makeBridge();
-        Collections.sort(al, (e1, e2) -> e1[2] - e2[2]);
 
+        System.out.println(prim());
+
+    }
+
+    public static int prim() {
+        PriorityQueue<int[]> pq = new PriorityQueue<>((e1, e2) -> e1[1] - e2[1]);
+        pq.offer(new int[] { 1, 0 });
+        int cnt = 1;
         int total = 0;
-        for (int i = 0; i < al.size(); i++) {
-            int[] bridge = al.get(i);
-            int isle1 = bridge[0];
-            int isle2 = bridge[1];
-            int cost = bridge[2];
+        boolean[] visit = new boolean[count];
 
-            if (find(isle1) != find(isle2)) {
-                union(isle1, isle2);
-                total += cost;
+        while (!pq.isEmpty()) {
+            int[] cur = pq.poll();
+            if (visit[cur[0]]) {
+                continue;
+            }
+            visit[cur[0]] = true;
+            total += cur[1];
+            cnt++;
+            if (count == cnt) {
+                return total;
+            }
+
+            for (int i = 0; i < al[cur[0]].size(); i++) {
+                int[] next = al[cur[0]].get(i);
+                if (visit[next[0]]) {
+                    continue;
+                }
+                pq.offer(next);
             }
         }
-
-        for (int i = 2; i < arr.length; i++) {
-            if (find(i - 1) != find(i)) {
-                System.out.println(-1);
-                System.exit(0);
-            }
-        }
-        System.out.println(total);
+        return -1;
     }
 
     public static void numbering() {
@@ -92,15 +108,12 @@ public class Main {
                 }
             }
         }
-        arr = new int[cnt];
-        for (int i = 1; i < cnt; i++) {
-            arr[i] = i;
-        }
+        count = cnt;
     }
 
     public static void makeBridge() {
-        int[] dy = { -1, 0, 1, 0 };
-        int[] dx = { 0, 1, 0, 1 };
+        int[] dy = { 0, 1 };
+        int[] dx = { 1, 0 };
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < M; j++) {
                 if (map[i][j] == 0) {
@@ -110,8 +123,6 @@ public class Main {
                 ArrayDeque<int[]> dq = new ArrayDeque<>();
                 dq.offerLast(new int[] { i, j, 0, 0 });
                 dq.offerLast(new int[] { i, j, 1, 0 });
-                dq.offerLast(new int[] { i, j, 2, 0 });
-                dq.offerLast(new int[] { i, j, 3, 0 });
 
                 while (!dq.isEmpty()) {
                     int[] cur = dq.pollFirst();
@@ -135,35 +146,11 @@ public class Main {
                         if (cnt < 2) {
                             continue;
                         }
-                        al.add(new int[] { map[i][j], map[ny][nx], cnt });
+                        al[map[i][j]].add(new int[] { map[ny][nx], cnt });
+                        al[map[ny][nx]].add(new int[] { map[i][j], cnt });
                     }
                 }
             }
         }
-    }
-
-    public static void union(int x, int y) {
-        x = find(x);
-        y = find(y);
-
-        if (x < y) {
-            arr[y] = x;
-        } else {
-            arr[x] = y;
-        }
-    }
-
-    public static int find(int x) {
-        if (arr[x] == x) {
-            return x;
-        }
-        return arr[x] = find(arr[x]);
-    }
-
-    public static boolean isSameSet(int x, int y) {
-        if (find(x) == find(y)) {
-            return true;
-        }
-        return false;
     }
 }

@@ -15,7 +15,6 @@ class Solution {
                 if(arr[i][j] == 'S') {
                     y = i;
                     x = j;
-                    arr[i][j] = 'O';
                 }
             }
         }

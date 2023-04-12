@@ -1,40 +1,31 @@
 class Solution {
     public int[] solution(int[] sequence, int k) {
-        int[] answer = new int[2];
-        int[] totalSum = new int[sequence.length];
-        
-        totalSum[0] = sequence[0];
-        for(int i = 1; i < sequence.length; i++) {
-            totalSum[i] = totalSum[i-1] + sequence[i];
-        }
+        int start = 0;
+        int end = 0;
+        int sum = sequence[0];
         int minLength = Integer.MAX_VALUE;
-        int start = Integer.MAX_VALUE;
-        int end = Integer.MAX_VALUE;
-        for(int i = 0; i < sequence.length; i++) {
-            int lt = i;
-            int rt = sequence.length - 1;
-            
-            while(lt <= rt) {
-                int mid = (lt + rt) / 2;
-                int sum = i != 0 ? totalSum[mid] - totalSum[i - 1] : totalSum[mid];
-                
-                if(sum == k) {
-                    int length = mid - i;
-                    if(length < minLength) {
-                        start = i;
-                        end = mid;
-                        minLength = length;
-                    }
-                    break;
-                } else if(sum < k) {
-                    lt = mid + 1;
-                } else {
-                    rt = mid - 1;
+        int[] result = new int[2];
+
+        while (end < sequence.length) {
+            if (sum == k) {
+                if (end - start + 1 < minLength) {
+                    minLength = end - start + 1;
+                    result[0] = start;
+                    result[1] = end;
                 }
+                sum -= sequence[start];
+                start++;
+            } else if (sum < k) {
+                end++;
+                if (end < sequence.length) {
+                    sum += sequence[end];
+                }
+            } else {
+                sum -= sequence[start];
+                start++;
             }
         }
-        answer[0] = start;
-        answer[1] = end;
-        return answer;
+
+        return result;
     }
 }

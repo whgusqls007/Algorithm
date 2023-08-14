@@ -19,27 +19,26 @@ public class Main {
       int a = Integer.parseInt(st.nextToken());
       int b = Integer.parseInt(st.nextToken());
 
-      if (union(arr, a, b)) {
+      if (find(arr, a) == find(arr, b)) {
         System.out.println(m + 1);
         System.exit(0);
       }
+      union(arr, a, b);
     }
     System.out.println(0);
   }
 
-  public static boolean union(int[] arr, int a, int b) {
+  public static void union(int[] arr, int a, int b) {
     a = find(arr, a);
     b = find(arr, b);
 
-    if (a == b) {
-      return true;
-    } else if (a < b) {
+    if (a <= b) {
       arr[b] = a;
     } else {
       arr[a] = b;
     }
 
-    return false;
+    return;
   }
 
   public static int find(int[] arr, int a) {

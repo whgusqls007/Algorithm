@@ -1,83 +1,72 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.PriorityQueue;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.io.*;
 
 public class Main {
-	static int                        V, E, K;
-	static ArrayList<ArrayList<Edge>> vertex = new ArrayList<ArrayList<Edge>>();
-	static boolean[]                  visit;
-	static int[]                      cost;
-	static PriorityQueue<Edge>        pq     = new PriorityQueue<Edge>(
-			(e1, e2) -> Integer.compare(e1.c, e2.c)
-	);
-	static final int                  INF    = Integer.MAX_VALUE;
+  static int N, M;
+  static List<List<int[]>> list;
+  static final int INF = 1_000_000_000;
 
-	static class Edge {
-		int v, c;
+  public static void main(String[] args) throws Exception {
+    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    StringTokenizer st = new StringTokenizer(br.readLine());
+    N = Integer.parseInt(st.nextToken());
+    M = Integer.parseInt(st.nextToken());
 
-		public Edge(int v, int c) {
-			super();
-			this.v = v;
-			this.c = c;
-		}
+    int depart = Integer.parseInt(br.readLine());
 
-	}
+    list = new ArrayList<>();
+    for (int i = 0; i < N + 1; i++) {
+      list.add(new ArrayList<>());
+    }
 
-	public static void main(String[] args) throws Exception {
-		BufferedReader  br = new BufferedReader(new InputStreamReader(System.in));
-		BufferedWriter  bw = new BufferedWriter(new OutputStreamWriter(System.out));
-		StringTokenizer st = new StringTokenizer(br.readLine());
+    for (int i = 0; i < M; i++) {
+      st = new StringTokenizer(br.readLine());
+      int city1 = Integer.parseInt(st.nextToken());
+      int city2 = Integer.parseInt(st.nextToken());
+      int cost = Integer.parseInt(st.nextToken());
 
-		V     = Integer.parseInt(st.nextToken());
-		E     = Integer.parseInt(st.nextToken());
-		K     = Integer.parseInt(br.readLine());
+      list.get(city1).add(new int[] { city2, cost });
+    }
 
-		visit = new boolean[V + 1];
-		cost  = new int[V + 1];                  // prim에는 없는 놈임
+    int[] arr = dijkstra(depart);
+    BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
+    for (int i = 1; i < arr.length; i++) {
+      bw.write(arr[i] == INF ? "INF\n" : arr[i] + "\n");
+    }
+    bw.flush();
+  }
 
-		for (int i = 0; i < V + 1; i++) {
-			vertex.add(new ArrayList<Edge>());
-			cost[i] = INF;
-		}
+  public static int[] dijkstra(int depart) {
+    // 비용 배열 초기화
+    int[] arr = new int[N + 1];
+    Arrays.fill(arr, INF);
+    arr[depart] = 0;
 
-		for (int i = 0; i < E; i++) {
-			st = new StringTokenizer(br.readLine());
-			int v1 = Integer.parseInt(st.nextToken());
-			int v2 = Integer.parseInt(st.nextToken());
-			int c  = Integer.parseInt(st.nextToken());
-			// v1에서 갈수 있는 v2와 그 cost
-			vertex.get(v1).add(new Edge(v2, c));
-		}
-		dijkstra();
+    // 우선순위 큐 생성
+    PriorityQueue<int[]> pq = new PriorityQueue<>((e1, e2) -> Integer.compare(e1[1], e2[1]));
+    pq.offer(new int[] { depart, 0 });
 
-		for (int i = 1; i <= V; i++) {
-			bw.write(cost[i] == INF ? "INF\n" : String.format("%d\n", cost[i]));
-		}
-		bw.flush();
-	}
+    // 다익스트라
+    while (!pq.isEmpty()) {
+      int[] tmp = pq.poll();
+      int city = tmp[0];
+      int cost = tmp[1];
 
-	static void dijkstra() {
-		// 시작은 K --> 자기 자신한테 가는건 0임
-		cost[K] = 0;
-		pq.offer(new Edge(K, 0));
-		while (!pq.isEmpty()) {
-			Edge edge = pq.poll();
-			if (visit[edge.v]) continue;
-			visit[edge.v] = true;
+      if (cost > arr[city])
+        continue;
 
-			// pq 에서 꺼낸놈들로 부터 갈수 있는 다음 노드들
-			for (Edge next : vertex.get(edge.v)) {
+      for (int i = 0; i < list.get(city).size(); i++) {
+        int[] tmp2 = list.get(city).get(i);
+        int nextCity = tmp2[0];
+        int nextCost = tmp2[1];
 
-				if (!visit[next.v] && cost[next.v] > cost[edge.v] + next.c) {
-					cost[next.v] = cost[edge.v] + next.c;
-					pq.offer(new Edge(next.v, cost[next.v]));
-				}
-			}
-		}
-	}
+        if (arr[nextCity] > cost + nextCost) {
+          arr[nextCity] = cost + nextCost;
+          pq.offer(new int[] { nextCity, cost + nextCost });
+        }
+      }
+    }
+
+    return arr;
+  }
 }

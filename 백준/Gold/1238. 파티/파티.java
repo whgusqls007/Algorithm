@@ -22,17 +22,19 @@ public class Main {
     }
 
     final int INF = 100_000_000;
-    int[] arr = new int[N + 1];
+    int[] arr1 = new int[N + 1];
+    int[] arr2 = new int[N + 1];
+    Arrays.fill(arr1, INF);
+    arr1[X] = 0;
+    djik(X, arr1, list);
+
     int res = -1;
     for (int i = 1; i < N + 1; i++) {
-      Arrays.fill(arr, INF);
-      arr[i] = 0;
-      djik(i, arr, list);
-      int dist1 = arr[X];
-      Arrays.fill(arr, INF);
-      arr[X] = 0;
-      djik(X, arr, list);
-      int dist2 = arr[i];
+      Arrays.fill(arr2, INF);
+      arr2[i] = 0;
+      djik(i, arr2, list);
+      int dist1 = arr1[i];
+      int dist2 = arr2[X];
 
       res = Math.max(res, dist1 + dist2);
     }

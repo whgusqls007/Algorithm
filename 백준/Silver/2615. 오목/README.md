@@ -1,4 +1,4 @@
-# [Silver II] 오목 - 2615 
+# [Silver I] 오목 - 2615 
 
 [문제 링크](https://www.acmicpc.net/problem/2615) 
 
@@ -8,7 +8,7 @@
 
 ### 분류
 
-브루트포스 알고리즘(bruteforcing), 구현(implementation)
+브루트포스 알고리즘, 구현
 
 ### 문제 설명
 
